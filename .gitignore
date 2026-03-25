@@ -1,0 +1,16 @@
+# Build output
+target/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# Maven wrapper jar
+.mvn/wrapper/maven-wrapper.jar
+
+# OS files
+.DS_Store
+
+# Logs
+*.log
