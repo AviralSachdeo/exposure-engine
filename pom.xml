@@ -61,6 +61,13 @@
             <scope>provided</scope>
         </dependency>
 
+        <!-- Prometheus metrics (Pushgateway) -->
+        <dependency>
+            <groupId>io.prometheus</groupId>
+            <artifactId>simpleclient_pushgateway</artifactId>
+            <version>0.16.0</version>
+        </dependency>
+
         <!-- SLF4J API + simple binding -->
         <dependency>
             <groupId>org.slf4j</groupId>

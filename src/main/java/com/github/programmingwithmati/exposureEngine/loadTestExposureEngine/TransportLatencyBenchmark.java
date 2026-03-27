@@ -77,6 +77,8 @@ public class TransportLatencyBenchmark {
         int durationSec = intEnv("LOAD_TEST_DURATION", 10);
         kafkaBootstrap = strEnv("KAFKA_BOOTSTRAP", "localhost:9092");
 
+        BenchmarkMetrics metrics = new BenchmarkMetrics("transport");
+
         setupAeron();
         boolean kafkaOk = isKafkaAvailable();
 
@@ -94,6 +96,7 @@ public class TransportLatencyBenchmark {
                 {"Aeron/Kafka", "aeron", "kafka"},
                 {"Aeron/Aeron", "aeron", "aeron"},
         };
+        String[] modeLabels = {"kafka_kafka", "kafka_aeron", "aeron_kafka", "aeron_aeron"};
 
         double[][][] results = new double[4][3][];
         boolean[] ran = new boolean[4];
@@ -122,6 +125,7 @@ public class TransportLatencyBenchmark {
                 OUT.printf("%n  ▶ %,d msgs/sec  (%,d messages over %ds)%n", target, total, durationSec);
                 results[s][t] = runBenchmark(binT, meT, target, durationSec, bnPool, mePool, s, t);
                 printResult(results[s][t]);
+                metrics.pushPhaseResult(modeLabels[s], target, results[s][t]);
             }
         }
 

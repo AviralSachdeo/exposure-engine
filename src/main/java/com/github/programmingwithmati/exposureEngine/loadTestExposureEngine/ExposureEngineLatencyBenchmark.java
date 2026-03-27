@@ -46,6 +46,8 @@ public class ExposureEngineLatencyBenchmark {
         int durationSec = intEnv("LOAD_TEST_DURATION", 10);
         int warmup      = intEnv("LOAD_TEST_WARMUP", 100_000);
 
+        BenchmarkMetrics metrics = new BenchmarkMetrics("engine");
+
         printBanner(durationSec, warmup);
 
         OUT.print("Pre-generating JSON payload pool...");
@@ -69,10 +71,12 @@ public class ExposureEngineLatencyBenchmark {
             OUT.printf("%n  ▶ Store-Only (applyFill latency)%n");
             storeRes[t] = benchStore(target, total, warmup);
             printResult(storeRes[t]);
+            metrics.pushPhaseResult("store_only", target, storeRes[t]);
 
             OUT.printf("%n  ▶ Full Pipeline (JSON deser + parse + applyFill)%n");
             pipeRes[t] = benchPipeline(target, total, warmup, jsonPool, binanceFlag);
             printResult(pipeRes[t]);
+            metrics.pushPhaseResult("full_pipeline", target, pipeRes[t]);
 
             OUT.println();
         }

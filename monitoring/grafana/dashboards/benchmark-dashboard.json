@@ -1,0 +1,469 @@
+{
+  "uid": "exposure-benchmark",
+  "title": "Exposure Engine — Benchmark Dashboard",
+  "tags": ["benchmark", "exposure-engine"],
+  "timezone": "browser",
+  "editable": true,
+  "time": { "from": "now-1h", "to": "now" },
+  "refresh": "10s",
+  "schemaVersion": 39,
+  "panels": [
+    {
+      "type": "row",
+      "title": "In-Process Benchmark (Engine)",
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 0 },
+      "id": 1
+    },
+    {
+      "type": "barchart",
+      "title": "Engine — Latency Percentiles (µs)",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "h": 10, "w": 12, "x": 0, "y": 1 },
+      "id": 2,
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "unit": "µs",
+          "custom": {
+            "fillOpacity": 80,
+            "lineWidth": 1,
+            "axisBorderShow": false,
+            "axisPlacement": "auto",
+            "scaleDistribution": { "type": "linear" },
+            "gradientMode": "scheme"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "orientation": "vertical",
+        "showValue": "always",
+        "barWidth": 0.8,
+        "groupWidth": 0.7,
+        "stacking": "none",
+        "legend": { "displayMode": "list", "placement": "bottom", "calcs": [] },
+        "tooltip": { "mode": "multi", "sort": "desc" },
+        "xTickLabelRotation": -45
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "benchmark_latency_p50_microseconds{benchmark=\"engine\"}",
+          "legendFormat": "p50 · {{mode}} · {{target_rate}}/s",
+          "instant": true,
+          "range": false,
+          "refId": "A"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "benchmark_latency_p90_microseconds{benchmark=\"engine\"}",
+          "legendFormat": "p90 · {{mode}} · {{target_rate}}/s",
+          "instant": true,
+          "range": false,
+          "refId": "B"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "benchmark_latency_p99_microseconds{benchmark=\"engine\"}",
+          "legendFormat": "p99 · {{mode}} · {{target_rate}}/s",
+          "instant": true,
+          "range": false,
+          "refId": "C"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "benchmark_latency_p999_microseconds{benchmark=\"engine\"}",
+          "legendFormat": "p99.9 · {{mode}} · {{target_rate}}/s",
+          "instant": true,
+          "range": false,
+          "refId": "D"
+        }
+      ]
+    },
+    {
+      "type": "barchart",
+      "title": "Engine — Throughput (msgs/sec)",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "h": 10, "w": 12, "x": 12, "y": 1 },
+      "id": 3,
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "unit": "short",
+          "custom": {
+            "fillOpacity": 80,
+            "lineWidth": 1,
+            "axisBorderShow": false,
+            "axisPlacement": "auto",
+            "scaleDistribution": { "type": "linear" },
+            "gradientMode": "scheme"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "orientation": "vertical",
+        "showValue": "always",
+        "barWidth": 0.8,
+        "groupWidth": 0.7,
+        "stacking": "none",
+        "legend": { "displayMode": "list", "placement": "bottom", "calcs": [] },
+        "tooltip": { "mode": "multi", "sort": "desc" },
+        "xTickLabelRotation": -45
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "benchmark_target_throughput{benchmark=\"engine\"}",
+          "legendFormat": "Target · {{mode}} · {{target_rate}}/s",
+          "instant": true,
+          "range": false,
+          "refId": "A"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "benchmark_achieved_throughput{benchmark=\"engine\"}",
+          "legendFormat": "Achieved · {{mode}} · {{target_rate}}/s",
+          "instant": true,
+          "range": false,
+          "refId": "B"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Engine — P99 Latency Over Time (µs)",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 11 },
+      "id": 4,
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "unit": "µs",
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "pointSize": 6,
+            "showPoints": "always",
+            "spanNulls": true,
+            "axisBorderShow": false,
+            "axisPlacement": "auto",
+            "scaleDistribution": { "type": "linear" }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": { "displayMode": "list", "placement": "bottom", "calcs": ["lastNotNull"] },
+        "tooltip": { "mode": "multi", "sort": "desc" }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "benchmark_latency_p99_microseconds{benchmark=\"engine\"}",
+          "legendFormat": "p99 · {{mode}} · {{target_rate}}/s",
+          "instant": false,
+          "range": true,
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "type": "row",
+      "title": "Transport Benchmark (End-to-End)",
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 19 },
+      "id": 10
+    },
+    {
+      "type": "barchart",
+      "title": "Transport — Latency Percentiles (µs)",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "h": 10, "w": 12, "x": 0, "y": 20 },
+      "id": 11,
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "unit": "µs",
+          "custom": {
+            "fillOpacity": 80,
+            "lineWidth": 1,
+            "axisBorderShow": false,
+            "axisPlacement": "auto",
+            "scaleDistribution": { "type": "linear" },
+            "gradientMode": "scheme"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "orientation": "vertical",
+        "showValue": "always",
+        "barWidth": 0.8,
+        "groupWidth": 0.7,
+        "stacking": "none",
+        "legend": { "displayMode": "list", "placement": "bottom", "calcs": [] },
+        "tooltip": { "mode": "multi", "sort": "desc" },
+        "xTickLabelRotation": -45
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "benchmark_latency_p50_microseconds{benchmark=\"transport\"}",
+          "legendFormat": "p50 · {{mode}} · {{target_rate}}/s",
+          "instant": true,
+          "range": false,
+          "refId": "A"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "benchmark_latency_p90_microseconds{benchmark=\"transport\"}",
+          "legendFormat": "p90 · {{mode}} · {{target_rate}}/s",
+          "instant": true,
+          "range": false,
+          "refId": "B"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "benchmark_latency_p99_microseconds{benchmark=\"transport\"}",
+          "legendFormat": "p99 · {{mode}} · {{target_rate}}/s",
+          "instant": true,
+          "range": false,
+          "refId": "C"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "benchmark_latency_p999_microseconds{benchmark=\"transport\"}",
+          "legendFormat": "p99.9 · {{mode}} · {{target_rate}}/s",
+          "instant": true,
+          "range": false,
+          "refId": "D"
+        }
+      ]
+    },
+    {
+      "type": "barchart",
+      "title": "Transport — Throughput (msgs/sec)",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "h": 10, "w": 12, "x": 12, "y": 20 },
+      "id": 12,
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "unit": "short",
+          "custom": {
+            "fillOpacity": 80,
+            "lineWidth": 1,
+            "axisBorderShow": false,
+            "axisPlacement": "auto",
+            "scaleDistribution": { "type": "linear" },
+            "gradientMode": "scheme"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "orientation": "vertical",
+        "showValue": "always",
+        "barWidth": 0.8,
+        "groupWidth": 0.7,
+        "stacking": "none",
+        "legend": { "displayMode": "list", "placement": "bottom", "calcs": [] },
+        "tooltip": { "mode": "multi", "sort": "desc" },
+        "xTickLabelRotation": -45
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "benchmark_target_throughput{benchmark=\"transport\"}",
+          "legendFormat": "Target · {{mode}} · {{target_rate}}/s",
+          "instant": true,
+          "range": false,
+          "refId": "A"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "benchmark_achieved_throughput{benchmark=\"transport\"}",
+          "legendFormat": "Achieved · {{mode}} · {{target_rate}}/s",
+          "instant": true,
+          "range": false,
+          "refId": "B"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Transport — P99 Latency Over Time (µs)",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 30 },
+      "id": 13,
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "unit": "µs",
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "pointSize": 6,
+            "showPoints": "always",
+            "spanNulls": true,
+            "axisBorderShow": false,
+            "axisPlacement": "auto",
+            "scaleDistribution": { "type": "linear" }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": { "displayMode": "list", "placement": "bottom", "calcs": ["lastNotNull"] },
+        "tooltip": { "mode": "multi", "sort": "desc" }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "benchmark_latency_p99_microseconds{benchmark=\"transport\"}",
+          "legendFormat": "p99 · {{mode}} · {{target_rate}}/s",
+          "instant": false,
+          "range": true,
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "type": "row",
+      "title": "Detailed Results",
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 38 },
+      "id": 20
+    },
+    {
+      "type": "table",
+      "title": "All Benchmark Results",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "h": 10, "w": 24, "x": 0, "y": 39 },
+      "id": 21,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": { "type": "auto" },
+            "inspect": false
+          }
+        },
+        "overrides": [
+          {
+            "matcher": { "id": "byName", "options": "Value #A" },
+            "properties": [{ "id": "displayName", "value": "P50 (µs)" }]
+          },
+          {
+            "matcher": { "id": "byName", "options": "Value #B" },
+            "properties": [{ "id": "displayName", "value": "P90 (µs)" }]
+          },
+          {
+            "matcher": { "id": "byName", "options": "Value #C" },
+            "properties": [{ "id": "displayName", "value": "P99 (µs)" }]
+          },
+          {
+            "matcher": { "id": "byName", "options": "Value #D" },
+            "properties": [{ "id": "displayName", "value": "P99.9 (µs)" }]
+          },
+          {
+            "matcher": { "id": "byName", "options": "Value #E" },
+            "properties": [{ "id": "displayName", "value": "Avg (µs)" }]
+          },
+          {
+            "matcher": { "id": "byName", "options": "Value #F" },
+            "properties": [{ "id": "displayName", "value": "Achieved (msgs/s)" }]
+          },
+          {
+            "matcher": { "id": "byName", "options": "Value #G" },
+            "properties": [{ "id": "displayName", "value": "Target (msgs/s)" }]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm",
+        "footer": { "show": false }
+      },
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "__name__": true,
+              "instance": true,
+              "job": true
+            },
+            "indexByName": {
+              "benchmark": 0,
+              "mode": 1,
+              "target_rate": 2
+            }
+          }
+        }
+      ],
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "benchmark_latency_p50_microseconds",
+          "format": "table",
+          "instant": true,
+          "refId": "A"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "benchmark_latency_p90_microseconds",
+          "format": "table",
+          "instant": true,
+          "refId": "B"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "benchmark_latency_p99_microseconds",
+          "format": "table",
+          "instant": true,
+          "refId": "C"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "benchmark_latency_p999_microseconds",
+          "format": "table",
+          "instant": true,
+          "refId": "D"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "benchmark_latency_avg_microseconds",
+          "format": "table",
+          "instant": true,
+          "refId": "E"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "benchmark_achieved_throughput",
+          "format": "table",
+          "instant": true,
+          "refId": "F"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "benchmark_target_throughput",
+          "format": "table",
+          "instant": true,
+          "refId": "G"
+        }
+      ]
+    }
+  ]
+}
